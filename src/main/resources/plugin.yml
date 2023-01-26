@@ -1,0 +1,4 @@
+name: Moguratataki
+version: '${project.version}'
+main: mumei.moguratataki.Moguratataki
+api-version: 1.19
