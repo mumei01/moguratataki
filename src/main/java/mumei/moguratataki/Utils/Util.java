@@ -1,9 +1,9 @@
-package mumei.moguratataki;
+package mumei.moguratataki.Utils;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Utils {
+public class Util {
 
     public static Boolean is_no_move = false;
 

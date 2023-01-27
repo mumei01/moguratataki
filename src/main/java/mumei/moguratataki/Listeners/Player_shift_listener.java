@@ -1,6 +1,6 @@
 package mumei.moguratataki.Listeners;
 
-import mumei.moguratataki.Utils;
+import mumei.moguratataki.Utils.Util;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -41,7 +41,7 @@ public class Player_shift_listener implements Listener {
                     return;
                 }
                 player.teleport(loc);
-                Utils.setIs_no_move(false);
+                Util.setIs_no_move(false);
             }
 
 

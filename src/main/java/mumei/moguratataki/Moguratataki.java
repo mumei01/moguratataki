@@ -1,27 +1,28 @@
 package mumei.moguratataki;
 
-import mumei.moguratataki.Listeners.Player_jump;
-import mumei.moguratataki.Listeners.Player_move;
-import mumei.moguratataki.Listeners.Player_shift_listener;
+import mumei.moguratataki.Config.MoguraConfig;
+import mumei.moguratataki.Game.GameControl;
+import mumei.moguratataki.Listeners.GameListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Moguratataki extends JavaPlugin {
-    private static JavaPlugin plugin;
-    public static Player_shift_listener pl_sh_listener;
-    public static Player_jump pl_jp_ilstener;
-    public static Player_move pl_move_listener;
+    private static Moguratataki plugin;
+    private static MoguraConfig config;
+    public static Commands commands;
+    public static GameControl gameControl;
+
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         plugin = this;
-        pl_jp_ilstener = new Player_jump();
-        pl_sh_listener = new Player_shift_listener();
-        pl_move_listener = new Player_move();
 
-        getServer().getPluginManager().registerEvents(pl_sh_listener,this);
-        getServer().getPluginManager().registerEvents(pl_jp_ilstener,this);
-        getServer().getPluginManager().registerEvents(pl_move_listener,this);
+        config = new MoguraConfig(this);
+
+        gameControl = new GameControl(10, 30);
+        commands = new Commands();
+
+        getServer().getPluginManager().registerEvents(new GameListener(),this);
 
         getLogger().info("もぐらたたきが有効になった。");
     }
@@ -33,5 +34,7 @@ public final class Moguratataki extends JavaPlugin {
         getLogger().info("もぐらたたきが無効になった。");
     }
 
-    public static JavaPlugin getplugin(){return plugin;}
+    public static Moguratataki getplugin() { return plugin; }
+    public static MoguraConfig getMoguraConfig() { return config; }
+    public static GameControl getGameControl() { return gameControl; }
 }
