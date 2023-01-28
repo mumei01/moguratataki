@@ -1,11 +1,11 @@
 package mumei.moguratataki.Listeners;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import mumei.moguratataki.Game.GameEndEvent;
+import mumei.moguratataki.Game.event.GameEndEvent;
+import mumei.moguratataki.Game.event.GameStartEvent;
 import mumei.moguratataki.Moguratataki;
 import mumei.moguratataki.Team.Team;
 import mumei.moguratataki.Utils.Util;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityAirChangeEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -52,7 +54,6 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         final Player player = event.getPlayer();
-        player.setRemainingAir(1);
 
         if (!Moguratataki.getGameControl().isStarted()) return;
         if (!event.isSneaking()) return;
@@ -71,6 +72,8 @@ public class GameListener implements Listener {
 
         Util.hidePlayerFrom(player, new Team("player").getPlayers());
 
+        player.setRemainingAir(player.getRemainingAir() - 5);
+
         outingPlayers.remove(player);
     }
 
@@ -85,7 +88,14 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onGameEndEvent(GameEndEvent event) {
+    public void onGameStart(GameStartEvent event) {
+        for (Player player : new Team("mogura").getPlayers()) {
+            player.setRemainingAir(99);
+        }
+    }
+
+    @EventHandler
+    public void onGameEnd(GameEndEvent event) {
         for (Player player : new Team("mogura").getPlayers()) {
             Util.showPlayerFrom(player, new Team("player").getPlayers());
 
@@ -105,10 +115,35 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onEntityAirChange(EntityAirChangeEvent event) {
+        if (!Moguratataki.getGameControl().isStarted()) return;
         if (!(event.getEntity() instanceof Player)) return;
         final Player player = (Player) event.getEntity();
 
+        if (outingPlayers.contains(player)) {
+            if (player.getRemainingAir() >= player.getMaximumAir()) return;
+            event.setAmount(player.getRemainingAir() + 3);
+            return;
+        }
+        if (player.getRemainingAir() < -20) {
+            player.damage(2);
+            return;
+        }
+        event.setAmount(player.getRemainingAir() - 2);
+    }
 
+    @EventHandler
+    public void onPlayerSpawn(PlayerRespawnEvent event) {
+        final Player player = event.getPlayer();
+
+        if (!Moguratataki.getGameControl().isStarted()) return;
+        if (!new Team("mogura").hasPlayer(player)) return;
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setRemainingAir(player.getRemainingAir() - 5);
+            }
+        }.runTaskLater(Moguratataki.getplugin(), 20);
     }
 
     private void addCoolDownPlayer(Player player) {
