@@ -151,11 +151,10 @@ public class TeamControl {
      * @return チームに所属させれたか否か
      */
     public boolean joinPlayerTeam(Player player, String teamName) {
-        String playerName = player.getName();
         Team team = getTeam(teamName);
-        if (team == null || team.hasEntry(playerName)) return false;
+        if (team == null || team.hasPlayer(player)) return false;
 
-        team.addEntry(playerName);
+        team.addPlayer(player);
         return true;
     }
 
@@ -180,11 +179,10 @@ public class TeamControl {
      * @return チームから脱退させれたか否か
      */
     public boolean leavePlayerTeam(Player player, String teamName) {
-        String playerName = player.getName();
         Team team = getTeam(teamName);
-        if (team == null || !team.hasEntry(playerName)) return false;
+        if (team == null || !team.hasPlayer(player)) return false;
 
-        team.removeEntry(playerName);
+        team.removePlayer(player);
         return true;
     }
 
