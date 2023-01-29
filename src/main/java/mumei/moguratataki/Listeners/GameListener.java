@@ -6,6 +6,7 @@ import mumei.moguratataki.Game.event.GameStartEvent;
 import mumei.moguratataki.Moguratataki;
 import mumei.moguratataki.Team.Team;
 import mumei.moguratataki.Utils.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityAirChangeEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -89,8 +90,11 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onGameStart(GameStartEvent event) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.setMaximumAir(300);
+        }
         for (Player player : new Team("mogura").getPlayers()) {
-            player.setRemainingAir(99);
+            player.setRemainingAir(299);
         }
     }
 
@@ -118,6 +122,7 @@ public class GameListener implements Listener {
         if (!Moguratataki.getGameControl().isStarted()) return;
         if (!(event.getEntity() instanceof Player)) return;
         final Player player = (Player) event.getEntity();
+        System.out.println(player.getMaximumAir());
 
         if (outingPlayers.contains(player)) {
             if (player.getRemainingAir() >= player.getMaximumAir()) return;

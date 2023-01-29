@@ -33,6 +33,7 @@ public class Team {
     public Set<Player> getPlayers() {
         final Set<Player> players = new HashSet<>();
         for (OfflinePlayer player : getTeam().getPlayers()) {
+            if (!(player instanceof Player)) continue;
             players.add((Player) player);
         }
 

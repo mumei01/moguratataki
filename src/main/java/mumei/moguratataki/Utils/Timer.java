@@ -14,6 +14,7 @@ public final class Timer {
 
     public Timer(int time) {
         this.time = time;
+        currentTime = time;
     }
 
     public int getCurrentTime() {
@@ -30,7 +31,6 @@ public final class Timer {
 
     public void start() {
         if (timerTask != null && !timerTask.isCancelled()) timerTask.cancel();
-        currentTime = time;
 
         timerTask = new BukkitRunnable() {
             @Override

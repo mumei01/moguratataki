@@ -38,7 +38,6 @@ public class GameControl {
         gameTimer.setOnUpdate(() -> {
             //ここに毎秒処理、
 
-
             Bukkit.getServer().sendActionBar(Component.text("⌚ " + gameTimer.getCurrentTime()));
         });
         gameTimer.setOnEnd(() -> {

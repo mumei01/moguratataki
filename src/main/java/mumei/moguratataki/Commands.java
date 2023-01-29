@@ -125,7 +125,7 @@ public class Commands {
             players = new Team("player").getPlayers();
             for (Player player : players) {
                 player.sendMessage("プレイヤー");
-                player.setItemInHand(item);
+                player.getInventory().setItemInMainHand(item.getAsItemStack());
             }
 
 

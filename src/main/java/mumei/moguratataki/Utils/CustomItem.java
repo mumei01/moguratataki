@@ -13,8 +13,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -23,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class CustomItem extends @Nullable ItemStack {
+public class CustomItem {
     private final Material material;
     private final String title;
     private List<String> lore;
@@ -87,11 +85,6 @@ public class CustomItem extends @Nullable ItemStack {
             customItem.addUnsafeEnchantment(new Glow(), 1);
 
         return customItem;
-    }
-
-    @Override
-    public @NotNull HoverEvent<HoverEvent.ShowItem> asHoverEvent() {
-        return super.asHoverEvent();
     }
 
     private final static class Glow extends Enchantment {
