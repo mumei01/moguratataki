@@ -26,6 +26,8 @@ public class Commands {
         Bukkit.getCommandMap().register("moguratataki", new Start());
         Bukkit.getCommandMap().register("moguratataki", new Stop());
         Bukkit.getCommandMap().register("moguratataki", new Team_tp());
+        Bukkit.getCommandMap().register("moguratataki", new Set_pretime());
+        Bukkit.getCommandMap().register("moguratataki", new Set_time());
     }
 
     private final static class Team_add extends Command {
@@ -98,7 +100,7 @@ public class Commands {
 
     private final static class Start extends Command {
         public Start(){
-            super("start");
+            super("start_game");
             Set<Player> players;
         }
         @Override
@@ -115,6 +117,10 @@ public class Commands {
             }
             //ここ
             CustomItem item = new CustomItem(Material.STONE_AXE,"ハンマー");
+            item.setOnClick(event -> {
+
+
+            });
 
             players = new Team("player").getPlayers();
             for (Player player : players) {
@@ -130,7 +136,7 @@ public class Commands {
 
     private final static class Stop extends Command {
         public Stop(){
-            super("stop");
+            super("stop_game");
         }
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
@@ -227,5 +233,55 @@ public class Commands {
         }
     }
 
+    private final static class Set_pretime extends Command {
+        public Set_pretime(){
+            super("set_pretime");
+        }
+        @Override
+        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+            if (!(sender.isOp())){
+                sender.sendMessage("権限ありません。");
+                return true;
+            }
 
+            if (args.length == 1){
+                int value = Integer.parseInt(args[0]);
+                gameControl.setPreGameTime(value);
+                sender.sendMessage("プリタイムを"+value+"秒に設定しました。");
+            }else {
+                sender.sendMessage("プリタイムの設定に失敗しました。"+args.length);
+            }
+
+
+
+
+            return true;
+        }
+    }
+
+    private final static class Set_time extends Command {
+        public Set_time(){
+            super("set_time");
+        }
+        @Override
+        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+            if (!(sender.isOp())){
+                sender.sendMessage("権限ありません。");
+                return true;
+            }
+
+            if (args.length == 1){
+                int value = Integer.parseInt(args[0]);
+                gameControl.setGameTime(value);
+                sender.sendMessage("ゲーム時間を"+value+"秒に設定しました。");
+            }else {
+                sender.sendMessage("ゲーム時間の設定に失敗しました。");
+            }
+
+
+
+
+            return true;
+        }
+    }
 }

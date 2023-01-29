@@ -21,6 +21,7 @@ public class Player_jump implements Listener {
             loc.setY(loc.getY()+4);
             player.teleport(loc);
             Util.setIs_no_move(true);
+            
         }
 
 

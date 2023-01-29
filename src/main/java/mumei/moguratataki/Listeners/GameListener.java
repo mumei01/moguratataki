@@ -159,4 +159,14 @@ public class GameListener implements Listener {
     private boolean isCoolDown(Player player) {
         return coolDownPlayers.contains(player);
     }
+
+    @EventHandler
+    public void PlayerDeath(PlayerDeathEvent event){
+        if (!Moguratataki.getGameControl().isStarted()) return;
+        if (!(event.getEntity() instanceof Player)) return;
+
+
+
+
+    }
 }
