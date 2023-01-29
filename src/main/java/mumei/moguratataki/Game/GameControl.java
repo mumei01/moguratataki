@@ -1,5 +1,7 @@
 package mumei.moguratataki.Game;
 
+import mumei.moguratataki.Game.event.GameEndEvent;
+import mumei.moguratataki.Game.event.GameStartEvent;
 import mumei.moguratataki.Utils.Timer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -28,6 +30,7 @@ public class GameControl {
         });
         preGameTimer.setOnEnd(() -> {
             gameTimer.start();
+            Bukkit.getPluginManager().callEvent(new GameStartEvent());
         });
         preGameTimer.start();
 
@@ -42,6 +45,7 @@ public class GameControl {
             Bukkit.getPluginManager().callEvent(new GameEndEvent());
             started = false;
         });
+
         started = true;
     }
 
