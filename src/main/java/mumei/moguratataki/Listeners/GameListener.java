@@ -6,7 +6,9 @@ import mumei.moguratataki.Game.event.GameStartEvent;
 import mumei.moguratataki.Moguratataki;
 import mumei.moguratataki.Team.Team;
 import mumei.moguratataki.Utils.Util;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,6 +21,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.io.BukkitObjectInputStream;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +35,7 @@ public class GameListener implements Listener {
     public void onPlayerJump(PlayerJumpEvent event) {
         final Player player = event.getPlayer();
 
-        if (!Moguratataki.getGameControl().isStarted()) return;
+        if (!Moguratataki.getGameControl().isFixedStarted()) return;
         if (!Util.isInMoguraTeam(player)) return;
         if (outingPlayers.contains(player)) return;
 
@@ -56,7 +59,7 @@ public class GameListener implements Listener {
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         final Player player = event.getPlayer();
 
-        if (!Moguratataki.getGameControl().isStarted()) return;
+        if (!Moguratataki.getGameControl().isFixedStarted()) return;
         if (!event.isSneaking()) return;
         if (!Util.isInMoguraTeam(player)) return;
         if (!outingPlayers.contains(player)) return;
@@ -122,7 +125,6 @@ public class GameListener implements Listener {
         if (!Moguratataki.getGameControl().isStarted()) return;
         if (!(event.getEntity() instanceof Player)) return;
         final Player player = (Player) event.getEntity();
-        System.out.println(player.getMaximumAir());
 
         if (outingPlayers.contains(player)) {
             if (player.getRemainingAir() >= player.getMaximumAir()) return;
@@ -168,10 +170,33 @@ public class GameListener implements Listener {
     @EventHandler
     public void PlayerDeath(PlayerDeathEvent event){
         if (!Moguratataki.getGameControl().isStarted()) return;
-        if (!(event.getEntity() instanceof Player)) return;
+
+        final Player eventPlayer = event.getPlayer();
+
+        if (new Team("mogura").hasPlayer(eventPlayer)) {
+            eventPlayer.setGameMode(GameMode.SPECTATOR);
+            new Team("spec").addPlayer(eventPlayer);
+
+            if (outingPlayers.contains(eventPlayer)) {
+                outingPlayers.remove(eventPlayer);
+                final Player killer = eventPlayer.getKiller();
+                event.deathMessage(Component.text(eventPlayer.getName() + "が" + (killer == null ? "" :  killer.getDisplayName()) + "に殺されました"));
+            } else {
+                event.deathMessage(Component.text(eventPlayer.getName() + "が地中で溺れました"));
+            }
 
 
+            final Set<Player> leftMoguraPlayers = new Team("mogura").getPlayers();
 
+            if (leftMoguraPlayers.size() <= 0){
+                Moguratataki.getGameControl().stop();
+                Bukkit.broadcast(Component.text(("もぐらが全滅しました。プレイヤーの勝利です。")));
+                return;
+            }
 
+            Bukkit.broadcastMessage("残りのもぐらは"+leftMoguraPlayers.size()+"人です。");
+        }
+
+        outingPlayers.remove(eventPlayer);
     }
 }
