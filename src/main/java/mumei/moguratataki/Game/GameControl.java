@@ -2,6 +2,8 @@ package mumei.moguratataki.Game;
 
 import mumei.moguratataki.Game.event.GameEndEvent;
 import mumei.moguratataki.Game.event.GameStartEvent;
+import mumei.moguratataki.Game.event.GameUpdateEvent;
+import mumei.moguratataki.Game.event.PreGameUpdateEvent;
 import mumei.moguratataki.Utils.Timer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -10,7 +12,7 @@ import org.bukkit.Bukkit;
 
 public class GameControl {
 
-    private boolean started;
+    private boolean started, fixedStarted;
     private int preGameTime, gameTime;
     private Timer preGameTimer, gameTimer;
 
@@ -25,23 +27,27 @@ public class GameControl {
         if (started) stop();
         preGameTimer = new Timer(preGameTime);
         preGameTimer.setOnUpdate(() -> {
+            Bukkit.getPluginManager().callEvent(new PreGameUpdateEvent());
             Bukkit.broadcast(Component.text(preGameTimer.getCurrentTime() + "秒前"));
             Bukkit.getServer().showTitle(Title.title(Component.text(""), Component.text(preGameTimer.getCurrentTime() + "秒前")));
         });
         preGameTimer.setOnEnd(() -> {
             gameTimer.start();
+            fixedStarted = true;
             Bukkit.getPluginManager().callEvent(new GameStartEvent());
         });
         preGameTimer.start();
 
+
         gameTimer = new Timer(gameTime);
         gameTimer.setOnUpdate(() -> {
-            //ここに毎秒処理、
-
+            Bukkit.getPluginManager().callEvent(new GameUpdateEvent());
             Bukkit.getServer().sendActionBar(Component.text("⌚ " + gameTimer.getCurrentTime()));
         });
         gameTimer.setOnEnd(() -> {
-            Bukkit.getPluginManager().callEvent(new GameEndEvent());
+            // TODO
+            //Bukkit.getPluginManager().callEvent(new GameEndEvent());
+            fixedStarted = false;
             started = false;
         });
 
@@ -55,6 +61,10 @@ public class GameControl {
 
     public boolean isStarted() {
         return started;
+    }
+
+    public boolean isFixedStarted() {
+        return fixedStarted;
     }
 
     public void setPreGameTime(int preGameTime) {

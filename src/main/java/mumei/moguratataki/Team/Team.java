@@ -1,5 +1,6 @@
 package mumei.moguratataki.Team;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -36,7 +37,6 @@ public class Team {
             if (!(player instanceof Player)) continue;
             players.add((Player) player);
         }
-
         return players;
     }
 
@@ -55,6 +55,10 @@ public class Team {
             return getTeam();
         }
         return getScoreboard().getTeam(teamName);
+    }
+
+    public void setPrefix(String prefix) {
+        getTeam().prefix(Component.text(prefix));
     }
 
     private Scoreboard getScoreboard() {
