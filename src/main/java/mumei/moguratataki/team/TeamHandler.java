@@ -1,11 +1,14 @@
 package mumei.moguratataki.team;
 
 import mumei.moguratataki.Moguratataki;
+import mumei.moguratataki.team.listener.TeamFakeApplyListener;
+import mumei.moguratataki.utility.Util;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.scoreboard.Team;
 
 public final class TeamHandler {
     public TeamHandler() {
+        Util.registerEvents(Moguratataki.getplugin(), new TeamFakeApplyListener());
     }
 
     public void initialize() {

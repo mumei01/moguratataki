@@ -1,11 +1,16 @@
 package mumei.moguratataki.utility;
 
+import mumei.moguratataki.Moguratataki;
 import mumei.moguratataki.team.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class Util {
@@ -39,14 +44,20 @@ public class Util {
     }
 
     public static boolean isInMoguraTeam(Player player) {
-        return new Team("mogura").getPlayers().contains(player);
+        return Moguratataki.MoguratatakiTeam.MOGURA.getTeam().getPlayers().contains(player);
     }
 
     public static boolean isInPlayerTeam(Player player) {
-        return new Team("player").getPlayers().contains(player);
+        return Moguratataki.MoguratatakiTeam.PLAYER.getTeam().getPlayers().contains(player);
     }
 
     public static boolean isInSpecTeam(Player player) {
-        return new Team("spec").getPlayers().contains(player);
+        return Moguratataki.MoguratatakiTeam.SPEC.getTeam().getPlayers().contains(player);
+    }
+
+    public static void registerEvents(@Nonnull JavaPlugin plugin, Listener... listeners) {
+        for (Listener listener : listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, plugin);
+        }
     }
 }

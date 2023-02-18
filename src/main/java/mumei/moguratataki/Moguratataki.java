@@ -42,13 +42,6 @@ public final class Moguratataki extends JavaPlugin {
             team.getTeam().setPrefix("[" + team.getDisplayName() + "]");
         }
 
-        getServer().getPluginManager().registerEvents(new TeamFakeApplyListener(), this);
-        getServer().getPluginManager().registerEvents(new GameListener(), this);
-        getServer().getPluginManager().registerEvents(new SpectatorListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new MoguraListener(), this);
-        getServer().getPluginManager().registerEvents(new GameEndListener(), this);
-
         getLogger().info("もぐらたたきが有効になった。");
     }
 
