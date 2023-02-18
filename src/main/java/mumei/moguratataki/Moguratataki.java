@@ -4,15 +4,28 @@ import mumei.moguratataki.config.MoguraConfig;
 import mumei.moguratataki.game.GameControl;
 import mumei.moguratataki.listener.*;
 import mumei.moguratataki.team.Team;
+import mumei.moguratataki.team.TeamHandler;
 import mumei.moguratataki.team.listener.TeamFakeApplyListener;
 import mumei.moguratataki.utility.CommandUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Moguratataki extends JavaPlugin {
-    private static Moguratataki plugin;
-    private static MoguraConfig config;
     public static Commands commands;
     public static GameControl gameControl;
+    private static Moguratataki plugin;
+    private static MoguraConfig config;
+
+    public static Moguratataki getplugin() {
+        return plugin;
+    }
+
+    public static MoguraConfig getMoguraConfig() {
+        return config;
+    }
+
+    public static GameControl getGameControl() {
+        return gameControl;
+    }
 
     @Override
     public void onEnable() {
@@ -22,6 +35,7 @@ public final class Moguratataki extends JavaPlugin {
         config = new MoguraConfig(this);
 
         gameControl = new GameControl(3, 30);
+        new TeamHandler().initialize();
         commands = new Commands();
 
         for (MoguratatakiTeam team : MoguratatakiTeam.values()) {
@@ -29,7 +43,7 @@ public final class Moguratataki extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new TeamFakeApplyListener(), this);
-        getServer().getPluginManager().registerEvents(new GameListener(),this);
+        getServer().getPluginManager().registerEvents(new GameListener(), this);
         getServer().getPluginManager().registerEvents(new SpectatorListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new MoguraListener(), this);
@@ -70,8 +84,4 @@ public final class Moguratataki extends JavaPlugin {
             return new Team(name);
         }
     }
-
-    public static Moguratataki getplugin() { return plugin; }
-    public static MoguraConfig getMoguraConfig() { return config; }
-    public static GameControl getGameControl() { return gameControl; }
 }

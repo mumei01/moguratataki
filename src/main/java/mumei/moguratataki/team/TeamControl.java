@@ -20,22 +20,18 @@ import java.util.stream.Stream;
 public class TeamControl {
 
     /**
-     * チーム設定を定義します
-     */
-    public enum TeamSetting {
-        ALLOW_FRIENDLY_FIRE,
-        CAN_SEE_FRIENDLY_INVISIBLES
-    }
-
-    /**
      * メインスコアボードを取得
+     *
      * @return メインスコアボード
      */
     @NotNull
-    public Scoreboard getMainBoard() { return Bukkit.getScoreboardManager().getMainScoreboard(); }
+    public Scoreboard getMainBoard() {
+        return Bukkit.getScoreboardManager().getMainScoreboard();
+    }
 
     /**
      * チームを作成します
+     *
      * @param teamName
      * @return チームを作成できたか否か
      */
@@ -49,6 +45,7 @@ public class TeamControl {
 
     /**
      * チーム名からチームインスタンスを取得します
+     *
      * @param teamName
      * @return チームが存在する場合はチームインスタンス 存在しない場合は null を返します
      */
@@ -60,6 +57,7 @@ public class TeamControl {
 
     /**
      * チームを削除します
+     *
      * @param teamName
      * @return チームを削除できたか否か
      */
@@ -74,6 +72,7 @@ public class TeamControl {
 
     /**
      * チーム設定を変更します
+     *
      * @param teamName
      * @param teamSetting
      * @param value
@@ -101,6 +100,7 @@ public class TeamControl {
 
     /**
      * チーム設定を取得します
+     *
      * @param teamName
      * @param teamSetting
      * @return 項目が有効か否か
@@ -110,8 +110,12 @@ public class TeamControl {
         if (team == null) return false;
 
         switch (teamSetting) {
-            case ALLOW_FRIENDLY_FIRE: { return team.allowFriendlyFire(); }
-            case CAN_SEE_FRIENDLY_INVISIBLES: { return team.canSeeFriendlyInvisibles(); }
+            case ALLOW_FRIENDLY_FIRE: {
+                return team.allowFriendlyFire();
+            }
+            case CAN_SEE_FRIENDLY_INVISIBLES: {
+                return team.canSeeFriendlyInvisibles();
+            }
         }
 
         return false;
@@ -119,6 +123,7 @@ public class TeamControl {
 
     /**
      * チームのオプションを変更します
+     *
      * @param teamName
      * @param teamOption
      * @param teamOptionStatus
@@ -134,6 +139,7 @@ public class TeamControl {
 
     /**
      * チームのオプションステータスを取得します
+     *
      * @param teamName
      * @param teamOption
      * @return チームオプションステータス
@@ -146,6 +152,7 @@ public class TeamControl {
 
     /**
      * プレイヤーをチームに所属させます
+     *
      * @param player
      * @param teamName
      * @return チームに所属させれたか否か
@@ -160,6 +167,7 @@ public class TeamControl {
 
     /**
      * エンティティをチームに所属させます
+     *
      * @param entity
      * @param teamName
      * @return チームに所属させれたか否か
@@ -174,6 +182,7 @@ public class TeamControl {
 
     /**
      * プレイヤーをチームから脱退させます
+     *
      * @param player
      * @param teamName
      * @return チームから脱退させれたか否か
@@ -188,6 +197,7 @@ public class TeamControl {
 
     /**
      * エンティティをチームから脱退させます
+     *
      * @param entity
      * @param teamName
      * @return チームから脱退させれたか否か
@@ -202,13 +212,17 @@ public class TeamControl {
 
     /**
      * プレイヤーが所属するチームを取得します
+     *
      * @param player
      * @return チームインスタンス
      */
-    public Team getPlayerTeam(Player player) { return getEntityTeam(player); }
+    public Team getPlayerTeam(Player player) {
+        return getEntityTeam(player);
+    }
 
     /**
      * エンティティが所属するチームを取得します
+     *
      * @param entity
      * @return チームインスタンス
      */
@@ -221,6 +235,7 @@ public class TeamControl {
 
     /**
      * チームに所属しているプレイヤーを取得します
+     *
      * @param teamName
      * @return プレイヤー配列
      */
@@ -234,6 +249,7 @@ public class TeamControl {
 
     /**
      * チームに所属しているエンティティを取得します
+     *
      * @param teamName
      * @return エンティティ配列
      */
@@ -259,13 +275,24 @@ public class TeamControl {
 
     /**
      * 文字配列をUUIDへ解析します
+     *
      * @param uuidString
      * @return UUIDインスタンス
      */
     private UUID parseUUID(String uuidString) {
         try {
             return UUID.fromString(uuidString);
-        } catch (IllegalArgumentException e) { return null; }
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * チーム設定を定義します
+     */
+    public enum TeamSetting {
+        ALLOW_FRIENDLY_FIRE,
+        CAN_SEE_FRIENDLY_INVISIBLES
     }
 
 

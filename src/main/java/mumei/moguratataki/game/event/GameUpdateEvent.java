@@ -6,11 +6,11 @@ import org.bukkit.event.HandlerList;
 public class GameUpdateEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
+    public GameUpdateEvent() {
     }
 
-    public GameUpdateEvent() {
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     @Override

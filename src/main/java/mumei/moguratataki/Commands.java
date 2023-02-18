@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ public class Commands {
     public static JavaPlugin plugin = Moguratataki.getplugin();
     public static GameControl gameControl = Moguratataki.getGameControl();
 
-    public Commands(){
+    public Commands() {
         CommandUtil.register("moguratataki", new Start());
         CommandUtil.register("moguratataki", new Stop());
         CommandUtil.register("moguratataki", new Team_tp());
@@ -35,13 +34,14 @@ public class Commands {
 
 
     private final static class Start extends Command {
-        public Start(){
+        public Start() {
             super("start_game");
         }
+
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
             Set<Player> players;
-            if (!(sender.isOp())){
+            if (!(sender.isOp())) {
                 sender.sendMessage("権限ありません。");
                 return true;
             }
@@ -54,7 +54,7 @@ public class Commands {
             }
 
             //playerチームの処理
-            CustomItem item = new CustomItem(Material.STONE_AXE,"ハンマー");
+            CustomItem item = new CustomItem(Material.STONE_AXE, "ハンマー");
             item.setOnClick(event -> {
 
 
@@ -78,13 +78,14 @@ public class Commands {
     }
 
     private final static class Stop extends Command {
-        public Stop(){
+        public Stop() {
             super("stop_game");
         }
+
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
 
-            if (!(sender.isOp())){
+            if (!(sender.isOp())) {
                 sender.sendMessage("権限ありません。");
                 return true;
             }
@@ -92,48 +93,49 @@ public class Commands {
             return true;
         }
     }
-    
+
     private final static class Team_tp extends Command {
-        public Team_tp(){
+        public Team_tp() {
             super("tm_tp");
         }
+
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            if (!(sender.isOp())){
+            if (!(sender.isOp())) {
                 sender.sendMessage("権限ありません。");
                 return true;
             }
 
             Player tp_for = plugin.getServer().getPlayer(args[1]);
 
-            
+
             //○○さんにtp
-            if (args.length == 3){
+            if (args.length == 3) {
                 Location from_loc = plugin.getServer().getPlayer(args[2]).getLocation();
                 Set<Player> players;
-                switch (args[0]){
+                switch (args[0]) {
                     case "mogura":
                         players = new Team("mogura").getPlayers();
                         for (Player player : players) {
                             player.teleport(from_loc);
                         }
-                        sender.sendMessage(tp_for.getName()+"さんにmoguraチームをtpさせました。");
+                        sender.sendMessage(tp_for.getName() + "さんにmoguraチームをtpさせました。");
                         break;
                     case "player":
                         players = new Team("player").getPlayers();
                         for (Player player : players) {
                             player.teleport(from_loc);
                         }
-                        sender.sendMessage(tp_for.getName()+"さんにプレイヤーチームをtpさせました。");
+                        sender.sendMessage(tp_for.getName() + "さんにプレイヤーチームをtpさせました。");
                         break;
                     case "spec":
                         players = new Team("spec").getPlayers();
                         for (Player player : players) {
                             player.teleport(from_loc);
                         }
-                        sender.sendMessage(tp_for.getName()+"さんにスペクチームをtpさせました。");
+                        sender.sendMessage(tp_for.getName() + "さんにスペクチームをtpさせました。");
                         break;
-                        
+
                     default:
                         sender.sendMessage("チーム又はプレイヤーが見つかりません。");
                         break;
@@ -141,30 +143,30 @@ public class Commands {
             }
 
             //senderにtp
-            if (args.length == 2){
+            if (args.length == 2) {
                 Location from_loc = plugin.getServer().getPlayer(sender.getName()).getLocation();
                 Set<Player> players;
-                switch (args[0]){
+                switch (args[0]) {
                     case "mogura":
                         players = new Team("mogura").getPlayers();
                         for (Player player : players) {
                             player.teleport(from_loc);
                         }
-                        sender.sendMessage(tp_for+"さんにmoguraチームをtpさせました。");
+                        sender.sendMessage(tp_for + "さんにmoguraチームをtpさせました。");
                         break;
                     case "player":
                         players = new Team("player").getPlayers();
                         for (Player player : players) {
                             player.teleport(from_loc);
                         }
-                        sender.sendMessage(tp_for+"さんにプレイヤーチームをtpさせました。");
+                        sender.sendMessage(tp_for + "さんにプレイヤーチームをtpさせました。");
                         break;
                     case "spec":
                         players = new Team("spec").getPlayers();
                         for (Player player : players) {
                             player.teleport(from_loc);
                         }
-                        sender.sendMessage(tp_for+"さんにスペクチームをtpさせました。");
+                        sender.sendMessage(tp_for + "さんにスペクチームをtpさせました。");
                         break;
 
                     default:
@@ -177,25 +179,24 @@ public class Commands {
     }
 
     private final static class Set_pretime extends Command {
-        public Set_pretime(){
+        public Set_pretime() {
             super("set_pretime");
         }
+
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            if (!(sender.isOp())){
+            if (!(sender.isOp())) {
                 sender.sendMessage("権限ありません。");
                 return true;
             }
 
-            if (args.length == 1){
+            if (args.length == 1) {
                 int value = Integer.parseInt(args[0]);
                 gameControl.setPreGameTime(value);
-                sender.sendMessage("プリタイムを"+value+"秒に設定しました。");
-            }else {
-                sender.sendMessage("プリタイムの設定に失敗しました。"+args.length);
+                sender.sendMessage("プリタイムを" + value + "秒に設定しました。");
+            } else {
+                sender.sendMessage("プリタイムの設定に失敗しました。" + args.length);
             }
-
-
 
 
             return true;
@@ -203,21 +204,22 @@ public class Commands {
     }
 
     private final static class Set_time extends Command {
-        public Set_time(){
+        public Set_time() {
             super("set_time");
         }
+
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            if (!(sender.isOp())){
+            if (!(sender.isOp())) {
                 sender.sendMessage("権限ありません。");
                 return true;
             }
 
-            if (args.length == 1){
+            if (args.length == 1) {
                 int value = Integer.parseInt(args[0]);
                 gameControl.setGameTime(value);
-                sender.sendMessage("ゲーム時間を"+value+"秒に設定しました。");
-            }else {
+                sender.sendMessage("ゲーム時間を" + value + "秒に設定しました。");
+            } else {
                 sender.sendMessage("ゲーム時間の設定に失敗しました。");
             }
             return true;
@@ -236,7 +238,7 @@ public class Commands {
 
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-            if (!(sender.isOp())){
+            if (!(sender.isOp())) {
                 sender.sendMessage("権限ありません。");
                 return true;
             }

@@ -21,7 +21,5 @@ public final class GameEndListener implements Listener {
             // どちらかが勝利の時
             Bukkit.broadcast(Component.text("勝ったチーム: ").append(winnerTeam.getTeam().displayName()).color(TextColor.color(226, 85, 74)));
         }
-
-
     }
 }

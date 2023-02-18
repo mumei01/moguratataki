@@ -9,16 +9,15 @@ import javax.annotation.Nonnull;
 
 public class TeamJoinEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
-
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
-    }
     private final Team team;
     private final Player player;
-
     public TeamJoinEvent(@Nonnull Team team, @Nonnull Player player) {
         this.team = team;
         this.player = player;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public Team getTeam() {
