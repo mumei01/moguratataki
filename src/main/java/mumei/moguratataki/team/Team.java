@@ -1,15 +1,15 @@
-package mumei.moguratataki.Team;
+package mumei.moguratataki.team;
 
+import mumei.moguratataki.Moguratataki;
+import mumei.moguratataki.team.event.TeamJoinEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Team {
@@ -27,8 +27,13 @@ public class Team {
         getTeam().unregister();
     }
 
+    public String getTeamName() {
+        return teamName;
+    }
+
     public void addPlayer(Player player) {
         getTeam().addPlayer(player);
+        if (Moguratataki.getGameControl().isStarted()) Bukkit.getPluginManager().callEvent(new TeamJoinEvent(this, player));
     }
 
     public Set<Player> getPlayers() {

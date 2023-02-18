@@ -1,10 +1,11 @@
-package mumei.moguratataki.Game;
+package mumei.moguratataki.game;
 
-import mumei.moguratataki.Game.event.GameEndEvent;
-import mumei.moguratataki.Game.event.GameStartEvent;
-import mumei.moguratataki.Game.event.GameUpdateEvent;
-import mumei.moguratataki.Game.event.PreGameUpdateEvent;
-import mumei.moguratataki.Utils.Timer;
+import mumei.moguratataki.Moguratataki;
+import mumei.moguratataki.game.event.GameEndEvent;
+import mumei.moguratataki.game.event.GameStartEvent;
+import mumei.moguratataki.game.event.GameUpdateEvent;
+import mumei.moguratataki.game.event.PreGameUpdateEvent;
+import mumei.moguratataki.utility.Timer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -45,8 +46,7 @@ public class GameControl {
             Bukkit.getServer().sendActionBar(Component.text("⌚ " + gameTimer.getCurrentTime()));
         });
         gameTimer.setOnEnd(() -> {
-            // TODO
-            //Bukkit.getPluginManager().callEvent(new GameEndEvent());
+            Bukkit.getPluginManager().callEvent(new GameEndEvent(Moguratataki.MoguratatakiTeam.MOGURA.getTeam()));
             fixedStarted = false;
             started = false;
         });

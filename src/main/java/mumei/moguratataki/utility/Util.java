@@ -1,7 +1,7 @@
-package mumei.moguratataki.Utils;
+package mumei.moguratataki.utility;
 
 import mumei.moguratataki.Moguratataki;
-import mumei.moguratataki.Team.Team;
+import mumei.moguratataki.team.Team;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,9 +9,6 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Util {
 

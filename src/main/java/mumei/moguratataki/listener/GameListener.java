@@ -1,11 +1,11 @@
-package mumei.moguratataki.Listeners;
+package mumei.moguratataki.listener;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import mumei.moguratataki.Game.event.GameEndEvent;
-import mumei.moguratataki.Game.event.GameStartEvent;
+import mumei.moguratataki.game.event.GameEndEvent;
+import mumei.moguratataki.game.event.GameStartEvent;
 import mumei.moguratataki.Moguratataki;
-import mumei.moguratataki.Team.Team;
-import mumei.moguratataki.Utils.Util;
+import mumei.moguratataki.team.Team;
+import mumei.moguratataki.utility.Util;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.io.BukkitObjectInputStream;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -168,7 +167,7 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void PlayerDeath(PlayerDeathEvent event){
+    public void onPlayerDeath(PlayerDeathEvent event){
         if (!Moguratataki.getGameControl().isStarted()) return;
 
         final Player eventPlayer = event.getPlayer();
@@ -191,6 +190,7 @@ public class GameListener implements Listener {
             if (leftMoguraPlayers.size() <= 0){
                 Moguratataki.getGameControl().stop();
                 Bukkit.broadcast(Component.text(("もぐらが全滅しました。プレイヤーの勝利です。")));
+                Bukkit.getPluginManager().callEvent(new GameEndEvent(Moguratataki.MoguratatakiTeam.PLAYER.getTeam()));
                 return;
             }
 

@@ -1,4 +1,4 @@
-package mumei.moguratataki.Team;
+package mumei.moguratataki.team;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;

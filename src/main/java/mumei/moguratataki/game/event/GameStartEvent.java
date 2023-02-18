@@ -1,4 +1,4 @@
-package mumei.moguratataki.Game.event;
+package mumei.moguratataki.game.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
