@@ -41,21 +41,22 @@ public class GameControl {
         if (started) stop();
         preGameTimer = new Timer(preGameTime);
         preGameTimer.setOnUpdate(() -> {
-            Bukkit.getPluginManager().callEvent(new PreGameUpdateEvent(gameTimer.getCurrentTime()));
+            Bukkit.getPluginManager().callEvent(new PreGameUpdateEvent(preGameTimer.getCurrentTime()));
         });
         preGameTimer.setOnEnd(() -> {
             gameTimer.start();
             fixedStarted = true;
-            Bukkit.getPluginManager().callEvent(new GameStartEvent());
+            Bukkit.getPluginManager().callEvent(new GameStartEvent(false));
         });
         preGameTimer.start();
-
+        Bukkit.getPluginManager().callEvent(new GameStartEvent(true));
 
         gameTimer = new Timer(gameTime);
         gameTimer.setOnUpdate(() -> {
             Bukkit.getPluginManager().callEvent(new GameUpdateEvent(gameTimer.getCurrentTime()));
         });
         gameTimer.setOnEnd(() -> {
+            if (!started) return;
             fixedStarted = false;
             started = false;
             Bukkit.getPluginManager().callEvent(new GameEndEvent(Moguratataki.MoguratatakiTeam.MOGURA.getTeam()));
@@ -67,6 +68,8 @@ public class GameControl {
     public void stop() {
         if (preGameTimer != null) preGameTimer.stop();
         if (gameTimer != null) gameTimer.stop();
+        started = false;
+        fixedStarted = false;
     }
 
     public boolean isStarted() {

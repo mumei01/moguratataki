@@ -1,6 +1,7 @@
 package mumei.moguratataki.listener;
 
 import mumei.moguratataki.Moguratataki;
+import mumei.moguratataki.config.MoguraConfig;
 import mumei.moguratataki.team.Team;
 import mumei.moguratataki.team.event.TeamJoinEvent;
 import org.bukkit.GameMode;
@@ -18,5 +19,6 @@ public class PlayerListener implements Listener {
         final Player player = event.getPlayer();
 
         player.setGameMode(GameMode.ADVENTURE);
+        player.teleport(Moguratataki.getMoguraConfig().getValue(MoguraConfig.Key.PLAYER_INIT_LOCATION));
     }
 }

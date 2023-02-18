@@ -30,18 +30,18 @@ public final class Timer {
     }
 
     public void start() {
+        currentTime = time;
         if (timerTask != null && !timerTask.isCancelled()) timerTask.cancel();
 
         timerTask = new BukkitRunnable() {
             @Override
             public void run() {
+                onUpdate.run();
                 currentTime--;
                 if (currentTime <= 0) {
                     this.cancel();
                     onEnd.run();
-                    return;
                 }
-                onUpdate.run();
             }
         }.runTaskTimer(Moguratataki.getplugin(), 20, 20);
     }

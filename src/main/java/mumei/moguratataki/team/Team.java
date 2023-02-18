@@ -33,8 +33,7 @@ public class Team {
 
     public void addPlayer(Player player) {
         getTeam().addPlayer(player);
-        if (Moguratataki.getGameControl().isStarted())
-            Bukkit.getPluginManager().callEvent(new TeamJoinEvent(this, player));
+        if (Moguratataki.getGameControl().isStarted()) Bukkit.getPluginManager().callEvent(new TeamJoinEvent(this, player));
     }
 
     public Set<Player> getPlayers() {
