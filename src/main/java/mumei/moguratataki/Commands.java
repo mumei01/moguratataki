@@ -47,18 +47,8 @@ public class Commands {
             }
             gameControl.start();
 
-            //すぺくチームの処理
-            players = new Team("spec").getPlayers();
-            for (Player player : players) {
-                player.setGameMode(GameMode.SPECTATOR);
-            }
-
             //playerチームの処理
             CustomItem item = new CustomItem(Material.STONE_AXE, "ハンマー");
-            item.setOnClick(event -> {
-
-
-            });
 
             players = new Team("player").getPlayers();
             for (Player player : players) {
@@ -66,13 +56,6 @@ public class Commands {
                 player.getInventory().setItemInMainHand(item.getAsItemStack());
                 player.setGameMode(GameMode.ADVENTURE);
             }
-            //もぐらチームの処理
-            players = new Team("mogura").getPlayers();
-            for (Player player : players) {
-                player.setGameMode(GameMode.ADVENTURE);
-            }
-
-
             return true;
         }
     }
@@ -242,7 +225,7 @@ public class Commands {
                 sender.sendMessage("権限ありません。");
                 return true;
             }
-            if (args.length <= 2) {
+            if (args.length <= 1) {
                 sender.sendMessage("コマンド例 /set_team <チーム名> <プレイヤー名>...");
                 return true;
             }

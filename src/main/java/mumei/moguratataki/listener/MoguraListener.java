@@ -2,6 +2,7 @@ package mumei.moguratataki.listener;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import mumei.moguratataki.Moguratataki;
+import mumei.moguratataki.config.MoguraConfig;
 import mumei.moguratataki.game.event.GameEndEvent;
 import mumei.moguratataki.game.event.GameStartEvent;
 import mumei.moguratataki.team.Team;
@@ -37,6 +38,7 @@ public class MoguraListener implements Listener {
         final Player player = event.getPlayer();
 
         player.setGameMode(GameMode.ADVENTURE);
+        player.teleport(Moguratataki.getMoguraConfig().getValue(MoguraConfig.Key.MOGURA_INIT_LOCATION));
     }
 
     private final Set<Player> outingPlayers = new HashSet<>();
@@ -118,6 +120,7 @@ public class MoguraListener implements Listener {
 
     @EventHandler
     public void onGameStart(GameStartEvent event) {
+        if (event.isPre()) return;
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setMaximumAir(300);
         }
@@ -170,7 +173,7 @@ public class MoguraListener implements Listener {
 
         final Player eventPlayer = event.getPlayer();
 
-        if (outingPlayers.contains(eventPlayer)) {
+        if (Moguratataki.MoguratatakiTeam.MOGURA.getTeam().getPlayers().contains(eventPlayer) && outingPlayers.contains(eventPlayer)) {
             outingPlayers.remove(eventPlayer);
             final Player killer = eventPlayer.getKiller();
             event.deathMessage(Component.text(eventPlayer.getName() + "が" + (killer == null ? "" : killer.getDisplayName()) + "に殺されました"));

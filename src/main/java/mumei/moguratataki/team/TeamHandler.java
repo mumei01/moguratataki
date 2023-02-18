@@ -21,15 +21,15 @@ public final class TeamHandler {
 
         final Team player = Moguratataki.MoguratatakiTeam.SPEC.getTeam().getTeam();
         player.setAllowFriendlyFire(false);
-        mogura.setCanSeeFriendlyInvisibles(true);
-        mogura.color(NamedTextColor.AQUA);
+        player.setCanSeeFriendlyInvisibles(true);
+        player.color(NamedTextColor.AQUA);
         player.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
         player.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 
         final Team spec = Moguratataki.MoguratatakiTeam.SPEC.getTeam().getTeam();
         spec.setAllowFriendlyFire(false);
-        mogura.setCanSeeFriendlyInvisibles(true);
-        mogura.color(NamedTextColor.GRAY);
+        spec.setCanSeeFriendlyInvisibles(true);
+        spec.color(NamedTextColor.GRAY);
         spec.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
         spec.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OTHER_TEAMS);
     }

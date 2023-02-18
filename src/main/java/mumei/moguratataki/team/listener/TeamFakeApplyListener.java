@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 public final class TeamFakeApplyListener implements Listener {
     @EventHandler
     public void onGameStart(GameStartEvent event) {
+        if (event.isPre()) return;
         for (Moguratataki.MoguratatakiTeam team : Moguratataki.MoguratatakiTeam.values()) {
             for (Player player : team.getTeam().getPlayers()) {
                 Bukkit.getPluginManager().callEvent(new TeamJoinEvent(team.getTeam(), player));
