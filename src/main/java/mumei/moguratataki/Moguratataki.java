@@ -1,22 +1,31 @@
 package mumei.moguratataki;
 
-import mumei.moguratataki.Config.MoguraConfig;
-import mumei.moguratataki.Game.GameControl;
-import mumei.moguratataki.Listeners.GameListener;
-import mumei.moguratataki.Team.Team;
-import mumei.moguratataki.Utils.CommandUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
+import mumei.moguratataki.config.MoguraConfig;
+import mumei.moguratataki.game.GameControl;
+import mumei.moguratataki.listener.*;
+import mumei.moguratataki.team.Team;
+import mumei.moguratataki.team.TeamHandler;
+import mumei.moguratataki.team.listener.TeamFakeApplyListener;
+import mumei.moguratataki.utility.CommandUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Map;
-
 public final class Moguratataki extends JavaPlugin {
-    private static Moguratataki plugin;
-    private static MoguraConfig config;
     public static Commands commands;
     public static GameControl gameControl;
+    private static Moguratataki plugin;
+    private static MoguraConfig config;
 
+    public static Moguratataki getplugin() {
+        return plugin;
+    }
+
+    public static MoguraConfig getMoguraConfig() {
+        return config;
+    }
+
+    public static GameControl getGameControl() {
+        return gameControl;
+    }
 
     @Override
     public void onEnable() {
@@ -26,13 +35,12 @@ public final class Moguratataki extends JavaPlugin {
         config = new MoguraConfig(this);
 
         gameControl = new GameControl(3, 30);
+        new TeamHandler().initialize();
         commands = new Commands();
 
         for (MoguratatakiTeam team : MoguratatakiTeam.values()) {
             team.getTeam().setPrefix("[" + team.getDisplayName() + "]");
         }
-
-        getServer().getPluginManager().registerEvents(new GameListener(),this);
 
         getLogger().info("もぐらたたきが有効になった。");
     }
@@ -48,7 +56,7 @@ public final class Moguratataki extends JavaPlugin {
     public enum MoguratatakiTeam {
         MOGURA("mogura", "もぐら"),
         PLAYER("player", "プレイヤー"),
-        SPRC("sprc", "待機者");
+        SPEC("spec", "待機者");
 
         private final String name, displayName;
 
@@ -69,8 +77,4 @@ public final class Moguratataki extends JavaPlugin {
             return new Team(name);
         }
     }
-
-    public static Moguratataki getplugin() { return plugin; }
-    public static MoguraConfig getMoguraConfig() { return config; }
-    public static GameControl getGameControl() { return gameControl; }
 }

@@ -1,35 +1,28 @@
-package mumei.moguratataki.Utils;
+package mumei.moguratataki.utility;
 
 import mumei.moguratataki.Moguratataki;
-import mumei.moguratataki.Team.Team;
+import mumei.moguratataki.team.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Util {
 
     public static Boolean is_no_move = false;
 
-    public static Boolean getIs_no_move(){return is_no_move;}
-    public static void setIs_no_move(Boolean flag){is_no_move = flag;}
-
-    public static void hidePlayerFrom(Player targetPlayer, Collection<Player> from) {
-        for (Player player : from) {
-            player.hidePlayer(Moguratataki.getplugin(), targetPlayer);
-        }
+    public static Boolean getIs_no_move() {
+        return is_no_move;
     }
 
-    public static void showPlayerFrom(Player targetPlayer, Collection<Player> from) {
-        for (Player player : from) {
-            player.showPlayer(Moguratataki.getplugin(), targetPlayer);
-        }
+    public static void setIs_no_move(Boolean flag) {
+        is_no_move = flag;
     }
 
     @Nullable
@@ -51,14 +44,20 @@ public class Util {
     }
 
     public static boolean isInMoguraTeam(Player player) {
-        return new Team("mogura").getPlayers().contains(player);
+        return Moguratataki.MoguratatakiTeam.MOGURA.getTeam().getPlayers().contains(player);
     }
 
     public static boolean isInPlayerTeam(Player player) {
-        return new Team("player").getPlayers().contains(player);
+        return Moguratataki.MoguratatakiTeam.PLAYER.getTeam().getPlayers().contains(player);
     }
 
     public static boolean isInSpecTeam(Player player) {
-        return new Team("spec").getPlayers().contains(player);
+        return Moguratataki.MoguratatakiTeam.SPEC.getTeam().getPlayers().contains(player);
+    }
+
+    public static void registerEvents(@Nonnull JavaPlugin plugin, Listener... listeners) {
+        for (Listener listener : listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, plugin);
+        }
     }
 }

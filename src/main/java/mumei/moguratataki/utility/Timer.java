@@ -1,4 +1,4 @@
-package mumei.moguratataki.Utils;
+package mumei.moguratataki.utility;
 
 import mumei.moguratataki.Moguratataki;
 import org.bukkit.scheduler.BukkitRunnable;

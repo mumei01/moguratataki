@@ -1,11 +1,12 @@
-package mumei.moguratataki.Listeners;
+package mumei.moguratataki.listener;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import mumei.moguratataki.Game.event.GameEndEvent;
-import mumei.moguratataki.Game.event.GameStartEvent;
 import mumei.moguratataki.Moguratataki;
-import mumei.moguratataki.Team.Team;
-import mumei.moguratataki.Utils.Util;
+import mumei.moguratataki.game.event.GameEndEvent;
+import mumei.moguratataki.game.event.GameStartEvent;
+import mumei.moguratataki.team.Team;
+import mumei.moguratataki.team.event.TeamJoinEvent;
+import mumei.moguratataki.utility.Util;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -18,18 +19,42 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.io.BukkitObjectInputStream;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class GameListener implements Listener {
+public class MoguraListener implements Listener {
+    @EventHandler
+    public void onTeamJoin(TeamJoinEvent event) {
+        final Team team = event.getTeam();
+
+        if (!team.equals(Moguratataki.MoguratatakiTeam.MOGURA.getTeam())) return;
+
+        final Player player = event.getPlayer();
+
+        player.setGameMode(GameMode.ADVENTURE);
+    }
 
     private final Set<Player> outingPlayers = new HashSet<>();
     private final Set<Player> coolDownPlayers = new HashSet<>();
+
+    private void addCoolDownPlayer(Player player) {
+        coolDownPlayers.add(player);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                coolDownPlayers.remove(player);
+            }
+        }.runTaskLater(Moguratataki.getplugin(), 40);
+    }
+
+    private boolean isCoolDown(Player player) {
+        return coolDownPlayers.contains(player);
+    }
 
     @EventHandler
     public void onPlayerJump(PlayerJumpEvent event) {
@@ -49,7 +74,7 @@ public class GameListener implements Listener {
         location.setDirection(player.getLocation().getDirection());
         player.teleport(location);
 
-        Util.showPlayerFrom(player, new Team("player").getPlayers());
+        player.removePotionEffect(PotionEffectType.INVISIBILITY);
 
         outingPlayers.add(player);
         addCoolDownPlayer(player);
@@ -74,7 +99,7 @@ public class GameListener implements Listener {
         location.setDirection(player.getLocation().getDirection());
         player.teleport(location);
 
-        Util.hidePlayerFrom(player, new Team("player").getPlayers());
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 100000, false, false, false));
 
         player.setRemainingAir(player.getRemainingAir() - 5);
 
@@ -96,15 +121,15 @@ public class GameListener implements Listener {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setMaximumAir(300);
         }
-        for (Player player : new Team("mogura").getPlayers()) {
+        for (Player player : Moguratataki.MoguratatakiTeam.MOGURA.getTeam().getPlayers()) {
             player.setRemainingAir(299);
         }
     }
 
     @EventHandler
     public void onGameEnd(GameEndEvent event) {
-        for (Player player : new Team("mogura").getPlayers()) {
-            Util.showPlayerFrom(player, new Team("player").getPlayers());
+        for (Player player : Moguratataki.MoguratatakiTeam.MOGURA.getTeam().getPlayers()) {
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
 
             if (!outingPlayers.contains(player)) return;
             final Block belowBlock = Util.getBelowBlock(player.getLocation(), Material.PURPLE_WOOL);
@@ -125,6 +150,7 @@ public class GameListener implements Listener {
         if (!Moguratataki.getGameControl().isStarted()) return;
         if (!(event.getEntity() instanceof Player)) return;
         final Player player = (Player) event.getEntity();
+        if (!Moguratataki.MoguratatakiTeam.MOGURA.getTeam().getPlayers().contains(player)) return;
 
         if (outingPlayers.contains(player)) {
             if (player.getRemainingAir() >= player.getMaximumAir()) return;
@@ -139,64 +165,21 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerSpawn(PlayerRespawnEvent event) {
-        final Player player = event.getPlayer();
-
-        if (!Moguratataki.getGameControl().isStarted()) return;
-        if (!new Team("mogura").hasPlayer(player)) return;
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.setRemainingAir(player.getRemainingAir() - 5);
-            }
-        }.runTaskLater(Moguratataki.getplugin(), 20);
-    }
-
-    private void addCoolDownPlayer(Player player) {
-        coolDownPlayers.add(player);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                coolDownPlayers.remove(player);
-            }
-        }.runTaskLater(Moguratataki.getplugin(), 40);
-    }
-
-    private boolean isCoolDown(Player player) {
-        return coolDownPlayers.contains(player);
-    }
-
-    @EventHandler
-    public void PlayerDeath(PlayerDeathEvent event){
+    public void onPlayerDeath(PlayerDeathEvent event) {
         if (!Moguratataki.getGameControl().isStarted()) return;
 
         final Player eventPlayer = event.getPlayer();
 
-        if (new Team("mogura").hasPlayer(eventPlayer)) {
-            eventPlayer.setGameMode(GameMode.SPECTATOR);
-            new Team("spec").addPlayer(eventPlayer);
-
-            if (outingPlayers.contains(eventPlayer)) {
-                outingPlayers.remove(eventPlayer);
-                final Player killer = eventPlayer.getKiller();
-                event.deathMessage(Component.text(eventPlayer.getName() + "が" + (killer == null ? "" :  killer.getDisplayName()) + "に殺されました"));
-            } else {
-                event.deathMessage(Component.text(eventPlayer.getName() + "が地中で溺れました"));
-            }
-
-
-            final Set<Player> leftMoguraPlayers = new Team("mogura").getPlayers();
-
-            if (leftMoguraPlayers.size() <= 0){
-                Moguratataki.getGameControl().stop();
-                Bukkit.broadcast(Component.text(("もぐらが全滅しました。プレイヤーの勝利です。")));
-                return;
-            }
-
-            Bukkit.broadcastMessage("残りのもぐらは"+leftMoguraPlayers.size()+"人です。");
+        if (outingPlayers.contains(eventPlayer)) {
+            outingPlayers.remove(eventPlayer);
+            final Player killer = eventPlayer.getKiller();
+            event.deathMessage(Component.text(eventPlayer.getName() + "が" + (killer == null ? "" : killer.getDisplayName()) + "に殺されました"));
+        } else {
+            event.deathMessage(Component.text(eventPlayer.getName() + "が地中で溺れました"));
         }
 
         outingPlayers.remove(eventPlayer);
+
+        Moguratataki.MoguratatakiTeam.SPEC.getTeam().addPlayer(eventPlayer);
     }
 }

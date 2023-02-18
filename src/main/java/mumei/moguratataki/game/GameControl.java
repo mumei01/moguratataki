@@ -1,10 +1,13 @@
-package mumei.moguratataki.Game;
+package mumei.moguratataki.game;
 
-import mumei.moguratataki.Game.event.GameEndEvent;
-import mumei.moguratataki.Game.event.GameStartEvent;
-import mumei.moguratataki.Game.event.GameUpdateEvent;
-import mumei.moguratataki.Game.event.PreGameUpdateEvent;
-import mumei.moguratataki.Utils.Timer;
+import mumei.moguratataki.Moguratataki;
+import mumei.moguratataki.game.event.GameEndEvent;
+import mumei.moguratataki.game.event.GameStartEvent;
+import mumei.moguratataki.game.event.GameUpdateEvent;
+import mumei.moguratataki.game.event.PreGameUpdateEvent;
+import mumei.moguratataki.listener.*;
+import mumei.moguratataki.utility.Timer;
+import mumei.moguratataki.utility.Util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -21,15 +24,24 @@ public class GameControl {
         if (gameTime < 0) throw new IllegalArgumentException("ゲーム時間は0秒以上にする必要があるよ");
         this.preGameTime = preGameTime;
         this.gameTime = gameTime;
+
+        Util.registerEvents(
+                Moguratataki.getplugin(),
+                new GameEndListener(),
+                new GameListener(),
+                new GameUIListener(),
+                new MoguraListener(),
+                new PlayerListener(),
+                new PreGameUIListener(),
+                new SpectatorListener()
+        );
     }
 
     public void start() {
         if (started) stop();
         preGameTimer = new Timer(preGameTime);
         preGameTimer.setOnUpdate(() -> {
-            Bukkit.getPluginManager().callEvent(new PreGameUpdateEvent());
-            Bukkit.broadcast(Component.text(preGameTimer.getCurrentTime() + "秒前"));
-            Bukkit.getServer().showTitle(Title.title(Component.text(""), Component.text(preGameTimer.getCurrentTime() + "秒前")));
+            Bukkit.getPluginManager().callEvent(new PreGameUpdateEvent(gameTimer.getCurrentTime()));
         });
         preGameTimer.setOnEnd(() -> {
             gameTimer.start();
@@ -41,14 +53,12 @@ public class GameControl {
 
         gameTimer = new Timer(gameTime);
         gameTimer.setOnUpdate(() -> {
-            Bukkit.getPluginManager().callEvent(new GameUpdateEvent());
-            Bukkit.getServer().sendActionBar(Component.text("⌚ " + gameTimer.getCurrentTime()));
+            Bukkit.getPluginManager().callEvent(new GameUpdateEvent(gameTimer.getCurrentTime()));
         });
         gameTimer.setOnEnd(() -> {
-            // TODO
-            //Bukkit.getPluginManager().callEvent(new GameEndEvent());
             fixedStarted = false;
             started = false;
+            Bukkit.getPluginManager().callEvent(new GameEndEvent(Moguratataki.MoguratatakiTeam.MOGURA.getTeam()));
         });
 
         started = true;
