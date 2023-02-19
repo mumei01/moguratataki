@@ -9,10 +9,7 @@ import mumei.moguratataki.team.Team;
 import mumei.moguratataki.team.event.TeamJoinEvent;
 import mumei.moguratataki.utility.Util;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -180,6 +177,7 @@ public class MoguraListener implements Listener {
         } else {
             event.deathMessage(Component.text(eventPlayer.getName() + "が地中で溺れました"));
         }
+        Bukkit.broadcast(Component.text(ChatColor.AQUA + "残りのモグラの人数: " + outingPlayers.size()));
 
         outingPlayers.remove(eventPlayer);
 

@@ -36,8 +36,8 @@ public final class Timer {
         timerTask = new BukkitRunnable() {
             @Override
             public void run() {
-                onUpdate.run();
                 currentTime--;
+                onUpdate.run();
                 if (currentTime <= 0) {
                     this.cancel();
                     onEnd.run();

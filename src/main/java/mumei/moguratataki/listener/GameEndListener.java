@@ -10,6 +10,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionEffectType;
 
 public final class GameEndListener implements Listener {
     @EventHandler
@@ -28,6 +29,7 @@ public final class GameEndListener implements Listener {
         for (Player player : Bukkit.getOnlinePlayers()) {
             Moguratataki.MoguratatakiTeam.SPEC.getTeam().addPlayer(player);
             player.setGameMode(GameMode.ADVENTURE);
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
     }
 }
