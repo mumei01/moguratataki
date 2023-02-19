@@ -55,7 +55,5 @@ public class GameListener implements Listener {
             Bukkit.getPluginManager().callEvent(new GameEndEvent(Moguratataki.MoguratatakiTeam.PLAYER.getTeam()));
             return;
         }
-
-        Bukkit.broadcastMessage("残りのもぐらは" + leftMoguraPlayers.size() + "人です。");
     }
 }
